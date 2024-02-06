@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 
 # Serial port configuration
-ser = serial.Serial('/dev/tty.usbmodem11302', 9600, timeout=1)
+ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
 ser.flush()
 
 position_file = 'position.txt'  # Position storage file
