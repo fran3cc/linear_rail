@@ -1,69 +1,67 @@
-#include <Arduino.h>
+// #include <Arduino.h>
 
-const int dirPin = 2;   // Direction control pin
-const int stepPin = 4;  // Step (pulse) control pin
-const int enablePin = 7; // Enable control pin
+// const int dirPin = 2;
+// const int stepPin = 4;
+// const int enablePin = 7;
 
-const float stepsPerRevolution = 200; // Adjust this based on your stepper motor's steps per revolution
-// Assuming microstepping setting on the driver, adjust the microstep setting below
-const float microsteps = 16; // Example: 16 microsteps per step for the driver setting
-const float stepsPerCircle = stepsPerRevolution * microsteps; // Total steps per circle considering microstepping
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(dirPin, OUTPUT);
-  pinMode(stepPin, OUTPUT);
-  pinMode(enablePin, OUTPUT);
-  digitalWrite(enablePin, HIGH); // Disable stepper motor by default
-}
-
-void loop() {
-  if (Serial.available()) {
-    long currentPos = Serial.parseInt(); // Read current position in circles
-    long targetPos = Serial.parseInt();  // Read target position in circles
-    int rpm = Serial.parseInt();         // Read speed in RPM
-    
-    long moveDistance = targetPos - currentPos; // Calculate move distance in circles
-    long stepsToMove = moveDistance * stepsPerCircle; // Convert distance to steps
-    
-    // Calculate delay between steps for desired RPM
-    float stepDelay = (60.0 * 1000000.0) / (rpm * stepsPerRevolution * microsteps);
-
-    // Enable stepper motor
-    digitalWrite(enablePin, LOW);
-    
-    // Set direction
-    if (stepsToMove < 0) {
-      digitalWrite(dirPin, LOW);
-      stepsToMove = -stepsToMove; // Make steps to move positive
-    } else {
-      digitalWrite(dirPin, HIGH);
-    }
-    
-    // Move the stepper motor
-    for (long i = 0; i < stepsToMove; i++) {
-      digitalWrite(stepPin, HIGH);
-      delayMicroseconds(stepDelay / 2);
-      digitalWrite(stepPin, LOW);
-      delayMicroseconds(stepDelay / 2);
-    }
-    
-    // Optionally, disable the stepper motor after movement to save power
-    digitalWrite(enablePin, HIGH);
-    
-    // Wait for a bit before the next command
-    delay(1000);
-  }
-}
+// const float stepsPerRevolution = 200;
+// const float microsteps = 4;
+// const float stepsPerCircle = stepsPerRevolution * microsteps;
 
 // void setup() {
-//   pinMode(LED_BUILTIN, OUTPUT);
+//   Serial.begin(9600);
+//   pinMode(dirPin, OUTPUT);
+//   pinMode(stepPin, OUTPUT);
+//   pinMode(enablePin, OUTPUT);
+//   digitalWrite(enablePin, HIGH); // Disable stepper motor by default
 // }
 
 // void loop() {
-//   digitalWrite(LED_BUILTIN, HIGH);
-//   delay(1000);
-//   digitalWrite(LED_BUILTIN, LOW);
-//   delay(1000);
+//   if (Serial.available() > 0) {
+//     long currentPos = Serial.parseInt();
+//     long targetPos = Serial.parseInt();
+//     int rpm = Serial.parseInt();
+    
+//     Serial.flush(); // Clear the serial buffer to ensure no leftover data
+    
+//     long moveDistance = targetPos - currentPos;
+//     long stepsToMove = moveDistance * stepsPerCircle;
+    
+//     float stepDelay = (60.0 * 1000.0) / (rpm * stepsPerRevolution * microsteps);
+    
+//     digitalWrite(enablePin, LOW);
+    
+//     if (stepsToMove < 0) {
+//       digitalWrite(dirPin, LOW);
+//       stepsToMove = -stepsToMove;
+//     } else {
+//       digitalWrite(dirPin, HIGH);
+//     }
+    
+//     for (long i = 0; i < stepsToMove; i++) {
+//       digitalWrite(stepPin, HIGH);
+//       delayMicroseconds(stepDelay / 2);
+//       digitalWrite(stepPin, LOW);
+//       delayMicroseconds(stepDelay / 2);
+//     }
+    
+//     digitalWrite(enablePin, HIGH);
+    
+//     Serial.println("position reached"); // Send confirmation message
+    
+//     delay(1000); // Optional delay before processing next command
+//   }
 // }
 
+
+void setup() {
+  // 将数字引脚8设置为输出模式
+  pinMode(4, OUTPUT);
+}
+
+void loop() {
+  // 将引脚8设置为高电平，输出5V
+  digitalWrite(4, HIGH);
+  
+  // 这里没有其他的循环代码，所以引脚8会一直保持在5V
+}
