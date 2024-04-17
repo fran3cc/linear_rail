@@ -1,5 +1,11 @@
 ### Linear Rail System Project Report
 
+#### Steps to setup the raspi system
+1. setup the wifi connection
+2. install git, conda etc env
+3. test the flask app on raspi
+4. modify the startup process (look below for Appendix A)
+
 #### Introduction
 This report provides an overview of the newly designed linear rail system, focusing on its key components, operational flow, and specific technical considerations. The system utilizes a Raspberry Pi (RasPi) interfaced with an Arduino to control a stepper motor via a stepper driver. The integration is achieved through a Flask web application, which serves as the command and control interface. The linear motion is restricted and calibrated by switches located at both ends of the rail.
 
@@ -27,3 +33,64 @@ The linear rail system operates by coordinating several hardware components thro
 
 #### Conclusion
 The linear rail system effectively integrates multiple technologies to achieve precise control over stepper motor-driven linear motion. By using a Flask application hosted on a Raspberry Pi and interfacing with an Arduino, the system provides a versatile and scalable solution for various linear motion applications. However, attention must be paid to voltage compatibility between the Arduino and the stepper driver to ensure reliable operation. Future improvements might include more robust voltage conversion solutions or direct integration of higher voltage GPIO options.
+
+To modify the Raspberry Pi's startup process to automatically run a Flask application and flash Arduino code via UART, you can follow these steps:
+
+#### Appendix A: Raspi Startup Modify
+### Step 1: Prepare Your Flask Application
+Ensure that your Flask application is fully developed and functional on your Raspberry Pi. Assume your Flask application is located at `/home/pi/myflaskapp/app.py`.
+
+### Step 2: Create a Shell Script
+Create a shell script on the Raspberry Pi that will execute on startup, which will start the Flask application and flash the Arduino.
+
+1. Open a text editor and create a new shell script file:
+   ```bash
+   nano /home/pi/startup.sh
+   ```
+2. Add the following content to this script:
+   ```bash
+   #!/bin/bash
+   # Start the Flask application
+   export FLASK_APP=/home/pi/myflaskapp/app.py
+   flask run --host=0.0.0.0
+
+   # Flash Arduino via UART
+   avrdude -p atmega328p -c arduino -P /dev/ttyAMA0 -b 115200 -U flash:w:/path/to/your/Arduino/code.hex
+   ```
+   Replace `/path/to/your/Arduino/code.hex` with the actual path to your Arduino firmware.
+
+3. Save and close the file.
+4. Make the script executable:
+   ```bash
+   chmod +x /home/pi/startup.sh
+   ```
+
+### Step 3: Configure the Script to Run at Boot
+To ensure the script runs at startup, you need to add it to the Raspberry Pi’s crontab or use `rc.local`.
+
+#### Using Crontab:
+1. Open the crontab editor:
+   ```bash
+   crontab -e
+   ```
+2. Add the following line at the end of the crontab file:
+   ```bash
+   @reboot /home/pi/startup.sh
+   ```
+3. Save and exit the editor.
+
+#### Using rc.local:
+1. Open the `rc.local` file:
+   ```bash
+   sudo nano /etc/rc.local
+   ```
+2. Before the `exit 0` line, add the path to your script:
+   ```bash
+   /home/pi/startup.sh &
+   ```
+3. Save and exit the file.
+
+### Step 4: Test Your Setup
+Reboot your Raspberry Pi to ensure that the script runs correctly at startup. Check that the Flask app is running and that the Arduino is being flashed as expected.
+
+By following these steps, your Raspberry Pi will automatically start the Flask application and flash the Arduino code via UART when powered on. This setup is ideal for projects requiring automation and minimal manual intervention.
