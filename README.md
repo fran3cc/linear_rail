@@ -26,6 +26,30 @@ The linear rail system operates by coordinating several hardware components thro
 4. **Stepper Driver Activation**: The Arduino processes commands and transmits them as voltage signals to the stepper motor driver, which then controls the motor’s movements.
 5. **Calibration and Safety**: The limit switches are engaged to prevent the stepper motor from moving beyond the designated rail length, providing a safety cutoff and allowing for system recalibration.
 
+#### Micro Stepping Control with the Stepper Driver
+
+##### Overview
+The stepper driver in our linear rail system features micro stepping capabilities, which allows for finer control over the stepper motor's movements. This functionality is critical for applications requiring precise positioning and smooth motion.
+
+##### Integration with the Code
+To fully utilize the micro stepping capabilities of the stepper driver, the software controlling the Arduino must include specific instructions that match the configuration settings of the driver. This ensures that the motor can execute movements at the desired resolution.
+
+#### Technical Implementation
+1. **Driver Configuration**: The stepper driver must be correctly configured to enable micro stepping. This typically involves setting specific pins on the driver to define the micro stepping resolution (e.g., full step, half step, quarter step).
+
+2. **Code Synchronization**:
+   - **Arduino Code**: The Arduino code needs to include commands that correspond to the micro stepping settings of the stepper driver. This ensures that each pulse sent from the Arduino correctly translates into the intended movement increment of the stepper motor.
+   - **Raspberry Pi Coordination**: The Flask application on the Raspberry Pi should offer user controls that correspond to the micro stepping capabilities. This might include options for adjusting the step resolution in real-time based on user requirements.
+
+3. **Calibration and Testing**: It is essential to calibrate and test the system to ensure that the micro stepping functionality works as expected. This involves running the motor through its paces at all configured step resolutions and verifying that the movement matches the expected increments.
+
+#### Recommendations
+- **Documentation and Configuration**: Ensure that the stepper driver's documentation is thoroughly reviewed to correctly set the micro stepping pins.
+- **Software Updates**: Update both the Raspberry Pi and Arduino software to include options and support for adjusting and utilizing micro stepping settings.
+- **Testing Protocol**: Develop a comprehensive testing protocol to check the stepper motor’s performance at various micro stepping settings to ensure accuracy and reliability in operation.
+
+By addressing these additional details regarding micro stepping, the linear rail system can achieve greater precision and adaptability in its applications. The careful integration and testing of these features will enhance the overall functionality and performance of the system.
+
 #### Technical Considerations
 - **Voltage Compatibility**: The Arduino GPIO outputs a maximum of 3V, insufficient for the stepper driver that requires a minimum input of 4.5V. To address this, the following solutions are considered:
   - **Use of a MOSFET**: A MOSFET can be used to boost the 3V output from the Arduino to a higher voltage suitable for the stepper driver.
