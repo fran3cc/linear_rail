@@ -52,16 +52,3 @@
 //     delay(1000); // Optional delay before processing next command
 //   }
 // }
-
-
-void setup() {
-  // 将数字引脚8设置为输出模式
-  pinMode(4, OUTPUT);
-}
-
-void loop() {
-  // 将引脚8设置为高电平，输出5V
-  digitalWrite(4, HIGH);
-  
-  // 这里没有其他的循环代码，所以引脚8会一直保持在5V
-}
